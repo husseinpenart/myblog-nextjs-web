@@ -1,3 +1,4 @@
+'use client'
 import Tabs from '@/app/components/global/Tabs'
 import React from 'react'
 
