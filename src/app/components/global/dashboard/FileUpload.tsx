@@ -43,7 +43,7 @@ const FileUpload = () => {
                 {...dragProps}
                 className="text-center font-[NunitoBold] text-gray-800 text-xl mx-auto block"
               >
-                Click or Drop here Cover
+                Click or Drop  Cover
                 <svg
                   className="w-24 h-14 text-gray-400 dark:text-white mx-auto block"
                   aria-hidden="true"

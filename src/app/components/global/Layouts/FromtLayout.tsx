@@ -16,6 +16,10 @@ const FromtLayout = () => {
       <div className="px-2.5 m-2 pt-4">
         <EditorTool />
       </div>
+
+      <button className="mx-auto block  my-10 rounded border dark:border-white p-2 bg-gray-400 dark:bg-transparent cursor-pointer capitalize font-[NunitoMedium] text-md border-black">
+        submit{" "}
+      </button>
     </div>
   );
 };

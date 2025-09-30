@@ -1,10 +1,19 @@
-import { useState } from "react";
-import { OpenSidebar } from "../../@types/index.global";
+import { useEffect, useState } from "react";
+import { OpenSidebar, openToggleMenu } from "../../@types/index.global";
+import MobileSidebar from "./MobileSidebar";
+import { motion, AnimatePresence } from "framer-motion";
 
 const Sidebar = () => {
   const [openBlogs, setOpenBlogs] = useState<OpenSidebar>("Close");
+  const [toggle, setToggle] = useState<openToggleMenu>("Off");
   const handleOpenBlogSidebar = () => {
     setOpenBlogs((prev) => (prev === "Open" ? "Close" : "Open"));
+  };
+  const handleToggleUp = () => {
+    setToggle((prev) => (prev === "On" ? "Off" : "On"));
+  };
+  const handleToggleDown = () => {
+    setToggle("Off");
   };
 
   return (
@@ -15,11 +24,12 @@ const Sidebar = () => {
           data-drawer-toggle="sidebar-multi-level-sidebar"
           aria-controls="sidebar-multi-level-sidebar"
           type="button"
+          onClick={handleToggleUp}
           className="inline-flex items-center p-2 mt-2 ms-3 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
         >
           <span className="sr-only">Open sidebar</span>
           <svg
-            className="w-6 h-6"
+            className="w-8 h-8"
             aria-hidden="true"
             fill="currentColor"
             viewBox="0 0 20 20"
@@ -32,6 +42,19 @@ const Sidebar = () => {
             />
           </svg>
         </button>
+        {toggle === "On" ? (
+          <MobileSidebar onCloseAction={handleToggleDown} />
+        ) : (
+          toggle == "Off" && (
+            <motion.div
+              key="toggleOff"
+              initial={{ opacity: 0, x: -50 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -50 }}
+              transition={{ duration: 0.4 }}
+            ></motion.div>
+          )
+        )}
         <aside
           id="sidebar-multi-level-sidebar"
           className="fixed top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0"
@@ -149,7 +172,7 @@ const Sidebar = () => {
               </li>
               <li>
                 <a
-                  href="#"
+                  href="/edit-profile"
                   className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
                 >
                   <svg
