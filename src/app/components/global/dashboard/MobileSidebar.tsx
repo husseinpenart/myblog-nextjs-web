@@ -6,9 +6,7 @@ import {
 } from "../../@types/index.global";
 import { motion, AnimatePresence } from "framer-motion";
 
-const MobileSidebar = ({
-  onCloseAction,
-}: MobileSideBarType) => {
+const MobileSidebar = ({ onCloseAction }: MobileSideBarType) => {
   const [openBlogs, setOpenBlogs] = useState<OpenSidebar>("Close");
 
   const handleOpenBlogSidebar = () => {
@@ -21,9 +19,9 @@ const MobileSidebar = ({
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: 50 }}
       transition={{ duration: 0.2 }}
-      className={`w-64  dark:shadow dark:shadow-white bg-gray-500 fixed left-0 h-screen z-40 top-0`}
+      className={`w-64  dark:shadow dark:shadow-white bg-[#1e2939] fixed left-0 h-screen z-40 top-0`}
     >
-      <button>
+      <button className="float-right my-3" >
         <svg
           className="w-6 h-6 text-gray-800 dark:text-white"
           aria-hidden="true"
@@ -44,7 +42,7 @@ const MobileSidebar = ({
         </svg>
       </button>
 
-      <div className="h-full px-3 py-4 overflow-y-auto bg-gray-50 dark:bg-gray-800">
+      <div className="h-full px-3 py-4 overflow-y-auto bg-gray-50 dark:bg-gray-800 my-10">
         <ul className="space-y-2 font-medium">
           <li>
             <a

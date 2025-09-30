@@ -1,4 +1,4 @@
-import { ChangeEventHandler } from "react";
+import React, { ChangeEventHandler, Ref } from "react";
 
 export type TabStatus = "Login" | "Register";
 export type OpenSidebar = "Open" | "Close";
@@ -13,4 +13,5 @@ export interface InputTypes {
 
 export interface MobileSideBarType {
   onCloseAction?: () => void;
+  ref?: Ref<HTMLDivElement> | undefined
 }
