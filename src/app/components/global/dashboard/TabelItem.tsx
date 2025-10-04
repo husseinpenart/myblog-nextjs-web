@@ -1,11 +1,55 @@
-import React from "react";
-import Pagination from "./Pagination";
+"use client";
 
-const TabelItem = () => {
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { getBlogsPaginated } from "@/app/services/dashboard/blogService";
+import Pagination from "./Pagination";
+import Link from "next/link";
+
+const BlogTable = () => {
+  const [currentPage, setCurrentPage] = useState(1);
+  const [searchTerm, setSearchTerm] = useState("");
+  const pageSize = 10;
+
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["blogs", currentPage, pageSize],
+    queryFn: () => getBlogsPaginated(currentPage, pageSize),
+  });
+
+  const truncateText = (text: string, maxLength: number) => {
+    // Remove HTML tags
+    const strippedText = text.replace(/<[^>]*>/g, "");
+    if (strippedText.length <= maxLength) return strippedText;
+    return strippedText.substring(0, maxLength) + "...";
+  };
+
+  const filteredBlogs = data?.data.data.filter(
+    (blog) =>
+      blog.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      blog.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      blog.writer.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center p-8">
+        <div className="text-gray-500 dark:text-gray-400">Loading blogs...</div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center p-8">
+        <div className="text-red-500">Error loading blogs: {error.message}</div>
+      </div>
+    );
+  }
+
   return (
     <div>
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-        <div className="flex items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-4 bg-white dark:bg-gray-900">
+        <div className="flex items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-4 bg-white dark:bg-gray-900 p-4">
           <label htmlFor="table-search" className="sr-only">
             Search
           </label>
@@ -29,35 +73,34 @@ const TabelItem = () => {
             </div>
             <input
               type="text"
-              id="table-search-users"
+              id="table-search-blogs"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
               className="block p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              placeholder="Search for users"
+              placeholder="Search for blogs"
             />
           </div>
         </div>
         <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
-              <th scope="col" className="p-4">
-                <div className="flex items-center">
-                  <input
-                    id="checkbox-all-search"
-                    type="checkbox"
-                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                  />
-                  <label htmlFor="checkbox-all-search" className="sr-only">
-                    checkbox
-                  </label>
-                </div>
+              <th scope="col" className="px-6 py-3">
+                Cover
               </th>
               <th scope="col" className="px-6 py-3">
-                Name
+                Title
               </th>
               <th scope="col" className="px-6 py-3">
-                Position
+                Category
               </th>
               <th scope="col" className="px-6 py-3">
-                Status
+                Writer
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Description
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Created At
               </th>
               <th scope="col" className="px-6 py-3">
                 Action
@@ -65,241 +108,74 @@ const TabelItem = () => {
             </tr>
           </thead>
           <tbody>
-            <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
-              <td className="w-4 p-4">
-                <div className="flex items-center">
-                  <input
-                    id="checkbox-table-search-1"
-                    type="checkbox"
-                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                  />
-                  <label htmlFor="checkbox-table-search-1" className="sr-only">
-                    checkbox
-                  </label>
-                </div>
-              </td>
-              <th
-                scope="row"
-                className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white"
-              >
-                <img
-                  className="w-10 h-10 rounded-full"
-                  src="/docs/images/people/profile-picture-1.jpg"
-                  alt="Jese image"
-                />
-                <div className="ps-3">
-                  <div className="text-base font-semibold">Neil Sims</div>
-                  <div className="font-normal text-gray-500">
-                    neil.sims@flowbite.com
-                  </div>
-                </div>
-              </th>
-              <td className="px-6 py-4">React Developer</td>
-              <td className="px-6 py-4">
-                <div className="flex items-center">
-                  <div className="h-2.5 w-2.5 rounded-full bg-green-500 me-2" />{" "}
-                  Online
-                </div>
-              </td>
-              <td className="px-6 py-4">
-                <a
-                  href="#"
-                  className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+            {filteredBlogs && filteredBlogs.length > 0 ? (
+              filteredBlogs.map((blog) => (
+                <tr
+                  key={blog.id}
+                  className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600"
                 >
-                  Edit user
-                </a>
-              </td>
-            </tr>
-            <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
-              <td className="w-4 p-4">
-                <div className="flex items-center">
-                  <input
-                    id="checkbox-table-search-2"
-                    type="checkbox"
-                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                  />
-                  <label htmlFor="checkbox-table-search-2" className="sr-only">
-                    checkbox
-                  </label>
-                </div>
-              </td>
-              <th
-                scope="row"
-                className="flex items-center px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-              >
-                <img
-                  className="w-10 h-10 rounded-full"
-                  src="/docs/images/people/profile-picture-3.jpg"
-                  alt="Jese image"
-                />
-                <div className="ps-3">
-                  <div className="text-base font-semibold">Bonnie Green</div>
-                  <div className="font-normal text-gray-500">
-                    bonnie@flowbite.com
-                  </div>
-                </div>
-              </th>
-              <td className="px-6 py-4">Designer</td>
-              <td className="px-6 py-4">
-                <div className="flex items-center">
-                  <div className="h-2.5 w-2.5 rounded-full bg-green-500 me-2" />{" "}
-                  Online
-                </div>
-              </td>
-              <td className="px-6 py-4">
-                <a
-                  href="#"
-                  className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                  <td className="px-6 py-4">
+                    <img
+                      className="w-16 h-16 object-cover rounded"
+                      src={`${process.env.NEXT_PUBLIC_API_URL}/${blog.imagePath}`}
+                      alt={blog.title}
+                    />
+                  </td>
+                  <th
+                    scope="row"
+                    className="px-6 py-4 font-medium text-gray-900 dark:text-white"
+                  >
+                    <div className="max-w-xs">
+                      <div className="font-semibold">{blog.title}</div>
+                      <div className="text-xs text-gray-500 dark:text-gray-400">
+                        {blog.slug}
+                      </div>
+                    </div>
+                  </th>
+                  <td className="px-6 py-4">{blog.category}</td>
+                  <td className="px-6 py-4">{blog.writer}</td>
+                  <td className="px-6 py-4">
+                    <div className="max-w-xs">
+                      {truncateText(blog.description, 80)}
+                    </div>
+                  </td>
+                  <td className="px-6 py-4">
+                    {new Date(blog.createdAt).toLocaleDateString()}
+                  </td>
+                  <td className="px-6 py-4">
+                    <Link
+                      href={`/blog/edit/${blog.id}`}
+                      className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                    >
+                      Edit blog
+                    </Link>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td
+                  colSpan={7}
+                  className="px-6 py-4 text-center text-gray-500 dark:text-gray-400"
                 >
-                  Edit user
-                </a>
-              </td>
-            </tr>
-            <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
-              <td className="w-4 p-4">
-                <div className="flex items-center">
-                  <input
-                    id="checkbox-table-search-2"
-                    type="checkbox"
-                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                  />
-                  <label htmlFor="checkbox-table-search-2" className="sr-only">
-                    checkbox
-                  </label>
-                </div>
-              </td>
-              <th
-                scope="row"
-                className="flex items-center px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-              >
-                <img
-                  className="w-10 h-10 rounded-full"
-                  src="/docs/images/people/profile-picture-2.jpg"
-                  alt="Jese image"
-                />
-                <div className="ps-3">
-                  <div className="text-base font-semibold">Jese Leos</div>
-                  <div className="font-normal text-gray-500">
-                    jese@flowbite.com
-                  </div>
-                </div>
-              </th>
-              <td className="px-6 py-4">Vue JS Developer</td>
-              <td className="px-6 py-4">
-                <div className="flex items-center">
-                  <div className="h-2.5 w-2.5 rounded-full bg-green-500 me-2" />{" "}
-                  Online
-                </div>
-              </td>
-              <td className="px-6 py-4">
-                <a
-                  href="#"
-                  className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                >
-                  Edit user
-                </a>
-              </td>
-            </tr>
-            <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
-              <td className="w-4 p-4">
-                <div className="flex items-center">
-                  <input
-                    id="checkbox-table-search-2"
-                    type="checkbox"
-                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                  />
-                  <label htmlFor="checkbox-table-search-2" className="sr-only">
-                    checkbox
-                  </label>
-                </div>
-              </td>
-              <th
-                scope="row"
-                className="flex items-center px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-              >
-                <img
-                  className="w-10 h-10 rounded-full"
-                  src="/docs/images/people/profile-picture-5.jpg"
-                  alt="Jese image"
-                />
-                <div className="ps-3">
-                  <div className="text-base font-semibold">Thomas Lean</div>
-                  <div className="font-normal text-gray-500">
-                    thomes@flowbite.com
-                  </div>
-                </div>
-              </th>
-              <td className="px-6 py-4">UI/UX Engineer</td>
-              <td className="px-6 py-4">
-                <div className="flex items-center">
-                  <div className="h-2.5 w-2.5 rounded-full bg-green-500 me-2" />{" "}
-                  Online
-                </div>
-              </td>
-              <td className="px-6 py-4">
-                <a
-                  href="#"
-                  className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                >
-                  Edit user
-                </a>
-              </td>
-            </tr>
-            <tr className="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600">
-              <td className="w-4 p-4">
-                <div className="flex items-center">
-                  <input
-                    id="checkbox-table-search-3"
-                    type="checkbox"
-                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                  />
-                  <label htmlFor="checkbox-table-search-3" className="sr-only">
-                    checkbox
-                  </label>
-                </div>
-              </td>
-              <th
-                scope="row"
-                className="flex items-center px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-              >
-                <img
-                  className="w-10 h-10 rounded-full"
-                  src="/docs/images/people/profile-picture-4.jpg"
-                  alt="Jese image"
-                />
-                <div className="ps-3">
-                  <div className="text-base font-semibold">
-                    Leslie Livingston
-                  </div>
-                  <div className="font-normal text-gray-500">
-                    leslie@flowbite.com
-                  </div>
-                </div>
-              </th>
-              <td className="px-6 py-4">SEO Specialist</td>
-              <td className="px-6 py-4">
-                <div className="flex items-center">
-                  <div className="h-2.5 w-2.5 rounded-full bg-red-500 me-2" />{" "}
-                  Offline
-                </div>
-              </td>
-              <td className="px-6 py-4">
-                <a
-                  href="#"
-                  className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                >
-                  Edit user
-                </a>
-              </td>
-            </tr>
+                  No blogs found
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>
-      <div>
-        <Pagination />
-      </div>
+      {data && data.data.totalPages > 1 && (
+        <div className="mt-4">
+          <Pagination
+            currentPage={currentPage}
+            totalPages={data.data.totalPages}
+            onPageChange={setCurrentPage}
+          />
+        </div>
+      )}
     </div>
   );
 };
 
-export default TabelItem;
+export default BlogTable;
