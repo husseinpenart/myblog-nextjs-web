@@ -1,7 +1,7 @@
 import React from "react";
 import { InputTypes } from "../../@types/index.global";
 
-const Inputs = ({ placeholder, onChange, value, label , type }: InputTypes) => {
+const Inputs = ({ placeholder, onChange, value, label , type,name }: InputTypes) => {
   return (
     <div className="m-5">
       <div className="relative ">
@@ -12,6 +12,7 @@ const Inputs = ({ placeholder, onChange, value, label , type }: InputTypes) => {
           placeholder={placeholder}
           value={value}
           onChange={onChange}
+          name={name}
         />
         <label
           htmlFor="floating_outlined"

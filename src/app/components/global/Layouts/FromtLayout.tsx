@@ -47,10 +47,6 @@ const FormLayout = () => {
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] || null;
-    console.log(
-      "[v0] File selected:",
-      file ? { name: file.name, type: file.type, size: file.size } : "none"
-    );
     setForm((prev) => ({ ...prev, cover: file }));
     if (file) {
       setPreviewUrl(URL.createObjectURL(file));

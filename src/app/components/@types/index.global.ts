@@ -11,6 +11,7 @@ export interface InputTypes {
   value?: string;
   label?: string;
   type?: string;
+  name?: string;
 }
 
 export interface MobileSideBarType {

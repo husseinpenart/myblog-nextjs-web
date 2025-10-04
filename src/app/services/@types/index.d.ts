@@ -96,3 +96,37 @@ export interface PaginatedResponse<T> {
   data: PaginatedData<T>;
   extra: null;
 }
+export interface profileType {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  createdAt: string;
+  blogs: Array<{
+    id: string;
+    slug: string | null;
+    title: string;
+    imagePath: string;
+    description: string;
+    category: string;
+    writer: string;
+    userId: string;
+    createdAt: string;
+  }>;
+}
+
+export interface ProfileApiResponse<T> {
+  success: boolean;
+  message: string;
+  itemLength: number;
+  statusCode: number;
+  data: T | null;
+  extra: any | null;
+}
+
+export interface UpdateProfileType {
+  name?: string;
+  email?: string;
+  phone?: string;
+  password?: string;
+}

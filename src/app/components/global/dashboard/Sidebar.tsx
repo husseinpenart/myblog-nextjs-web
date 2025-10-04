@@ -2,10 +2,20 @@ import { useEffect, useState } from "react";
 import { OpenSidebar, openToggleMenu } from "../../@types/index.global";
 import MobileSidebar from "./MobileSidebar";
 import { motion, AnimatePresence } from "framer-motion";
+import Cookies from "universal-cookie";
+import { useRouter } from "next/navigation";
+import { clearAuthToken, setAuthToken } from "@/app/services/apiClient";
+import { useQuery } from "@tanstack/react-query";
+import { ProfileApiResponse, profileType } from "@/app/services/@types";
+import { getProfile } from "@/app/services/dashboard/userService";
+import { useAuth } from "@/app/context/AuthContext";
+import LoadingSpinner from "../LoadingSpinner";
 
 const Sidebar = () => {
   const [openBlogs, setOpenBlogs] = useState<OpenSidebar>("Close");
   const [toggle, setToggle] = useState<openToggleMenu>("Off");
+  const cookies = new Cookies();
+  const router = useRouter();
   const handleOpenBlogSidebar = () => {
     setOpenBlogs((prev) => (prev === "Open" ? "Close" : "Open"));
   };
@@ -15,6 +25,20 @@ const Sidebar = () => {
   const handleToggleDown = () => {
     setToggle("Off");
   };
+  const logout = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    clearAuthToken();
+    router.push("/");
+  };
+  const { token } = useAuth();
+
+  const { data, isLoading, error } = useQuery<ProfileApiResponse<profileType>>({
+    queryKey: ["profile"],
+    queryFn: () => {
+      setAuthToken(token);
+      return getProfile();
+    },
+  });
 
   return (
     <div>
@@ -83,7 +107,15 @@ const Sidebar = () => {
                     />
                   </svg>
 
-                  <span className="ms-3">Username</span>
+                  <span className="ms-3">
+                    {isLoading ? (
+                      <div role="status" className="max-w-sm animate-pulse">
+                        <div className="h-5 bg-gray-200 rounded-full dark:bg-gray-700 w-48  "></div>
+                      </div>
+                    ) : (
+                      data?.data?.name
+                    )}
+                  </span>
                 </a>
               </li>
               <li>
@@ -101,7 +133,15 @@ const Sidebar = () => {
                     <path d="M16.975 11H10V4.025a1 1 0 0 0-1.066-.998 8.5 8.5 0 1 0 9.039 9.039.999.999 0 0 0-1-1.066h.002Z" />
                     <path d="M12.5 0c-.157 0-.311.01-.565.027A1 1 0 0 0 11 1.02V10h8.975a1 1 0 0 0 1-.935c.013-.188.028-.374.028-.565A8.51 8.51 0 0 0 12.5 0Z" />
                   </svg>
-                  <span className="ms-3">Dashboard</span>
+                  <span className="ms-3">
+                    Dashboard{" "}
+                    <span className="text-[10px] text-gray-300 bg-gray-800 p-1 rounded ">
+                      NUM posts:
+                      <span className="text-red-400 ml-1">
+                        ({data?.data?.blogs.length})
+                      </span>
+                    </span>
+                  </span>
                 </a>
               </li>
               <li>
@@ -159,14 +199,6 @@ const Sidebar = () => {
                         create
                       </a>
                     </li>
-                    <li>
-                      <a
-                        href="#"
-                        className="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
-                      >
-                        blogs
-                      </a>
-                    </li>
                   </ul>
                 ) : null}
               </li>
@@ -197,9 +229,9 @@ const Sidebar = () => {
                 </a>
               </li>
               <li>
-                <a
-                  href="#"
-                  className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                <button
+                  onClick={(e: any) => logout(e)}
+                  className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
                 >
                   <svg
                     className="w-6 h-6 text-gray-500 "
@@ -218,7 +250,7 @@ const Sidebar = () => {
                   </svg>
 
                   <span className="flex-1 ms-3 whitespace-nowrap">Logout</span>
-                </a>
+                </button>
               </li>
             </ul>
           </div>

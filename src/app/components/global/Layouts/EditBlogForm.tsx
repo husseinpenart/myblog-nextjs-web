@@ -123,7 +123,6 @@ const EditBlogForm = ({ blogId }: EditBlogFormProps) => {
     });
   };
 
-  console.log("Formt: ", form);
   const getImageUrl = (imagePath: string) => {
     if (!imagePath) return "";
 
