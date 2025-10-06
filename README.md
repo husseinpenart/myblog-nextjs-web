@@ -1,8 +1,174 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+📝 MyBlog - Next.js Frontend
+This is the frontend for the MyBlog application, built with Next.js 15, React 19, and TypeScript. It integrates seamlessly with the ASP.NET Core Blog API to provide a modern, responsive, and feature-rich blogging platform. The frontend leverages TanStack Query for data fetching, FilePond and React Images Uploading for media uploads, and Jodit for a rich text editor experience. Styling is powered by Tailwind CSS, with animations handled by Framer Motion.
 
-## Getting Started
+✨ Features
 
-First, run the development server:
+Modern UI: Built with Next.js 15 and React 19 for a fast and responsive user experience.
+Rich Text Editing: Integrated with Jodit for creating and editing blog posts with a powerful WYSIWYG editor.
+Media Uploads: Supports image uploads via FilePond and React Images Uploading with preview functionality.
+Data Fetching: Uses TanStack Query for efficient and cached API requests to the backend.
+Type Safety: Written in TypeScript for robust and maintainable code.
+Styling: Powered by Tailwind CSS for rapid and responsive styling.
+Custom Server: Includes a custom Node.js server for advanced routing and development flexibility.
+Linting & Formatting: Uses Biome for code linting and formatting to ensure consistent code quality.
+
+🚀 Getting Started
+Prerequisites
+Ensure you have the following installed:
+
+Node.js (v18 or higher recommended)
+npm or yarn for package management
+Docker (optional, if running the backend API)
+Docker Compose (optional, for backend setup)
+
+1. Clone the Repository
+   [https://github.com/husseinpenart/myblog-nextjs-web]
+   cd myblog-frontend
+
+2. Install Dependencies
+   Install the required dependencies using npm or yarn:
+   npm install
+
+# or
+
+yarn install
+
+3. Configure Environment Variables
+   Create a .env.local file in the root of the project and configure the API URL for the backend:
+   NEXT_PUBLIC_API_URL=http://localhost:5203/api/v1
+
+Note: Replace http://localhost:5203/api/v1 with the URL of your running backend API (e.g., from the ASP.NET Core Blog API).
+
+4. Run the Development Server
+   Start the development server with Next.js and Turbopack for faster development:
+   npm run dev
+
+# or
+
+yarn dev
+
+The app will be available at http://localhost:3000.
+
+5. Build for Production
+   To create an optimized production build:
+   npm run build
+
+# or
+
+yarn build
+
+Start the production server:
+npm run start
+
+# or
+
+yarn start
+
+The production app will also be available at http://localhost:3000.
+
+6. Linting and Formatting
+   Ensure code quality with Biome:
+
+Linting: Check for code issues:
+npm run lint
+
+# or
+
+yarn lint
+
+Formatting: Automatically format code:
+npm run format
+
+# or
+
+yarn format
+
+🐳 Running with Backend (Optional)
+To run the frontend alongside the backend API, ensure the ASP.NET Core Blog API is running. Follow these steps:
+
+Clone the backend repository:
+git clone https://github.com/husseinpenart/asp-full-blog-api.git
+cd asp-full-blog-api
+
+#backend docker hub
+[husseinasadi/myblog-asp-api]
+Start the backend services using Docker Compose:
+docker compose up -d
+
+Ensure the NEXT_PUBLIC_API_URL in your .env.local points to the backend API (e.g., http://localhost:5203/api/v1).
+
+Start the frontend development server as described above.
+
+🛠️ Project Structure
+myblog/
+├── public/ # Static assets (images, fonts, etc.)
+├── src/ # Source code
+│ ├── components/ # Reusable React components
+│ ├── pages/ # Next.js pages (routes)
+│ ├── styles/ # Tailwind CSS and global styles
+│ └── utils/ # Utility functions and helpers
+├── .env.local # Environment variables (not tracked in git)
+├── next.config.js # Next.js configuration
+├── package.json # Project dependencies and scripts
+├── server.js # Custom Node.js server
+├── tailwind.config.js # Tailwind CSS configuration
+├── tsconfig.json # TypeScript configuration
+└── README.md # Project documentation
+
+📦 Dependencies
+Production Dependencies
+
+Next.js: Framework for server-rendered React applications.
+React & React DOM: Core libraries for building the UI.
+TanStack Query: For efficient data fetching and state management.
+Jodit & Jodit-React: Rich text editor for creating blog posts.
+FilePond & React-FilePond: File upload component with preview support.
+React Images Uploading: Image upload and preview functionality.
+Framer Motion: For smooth animations and transitions.
+Universal Cookie: For managing cookies across client and server.
+
+Development Dependencies
+
+Biome: Linting and formatting for code quality.
+Tailwind CSS: Utility-first CSS framework.
+Autoprefixer & PostCSS: For CSS processing and vendor prefixing.
+TypeScript: For type-safe JavaScript development.
+@types/\*: Type definitions for Node, React, and React DOM.
+
+⚙️ Configuration
+Next.js Configuration (next.config.js)
+
+Environment Variables: The NEXT_PUBLIC_API_URL variable is used to configure the backend API endpoint.
+TypeScript: Ignores build errors for flexibility during development (use with caution in production).
+Webpack: Configures fallbacks for fs, net, and tls to ensure compatibility in browser environments.
+
+Custom Server (server.js)
+The project includes a custom Node.js server for advanced routing and server-side logic. It listens on port 1078 by default and supports custom routes (e.g., /a, /b).
+
+✅ Notes
+
+Backend Dependency: The frontend requires the ASP.NET Core Blog API to function fully. Ensure the backend is running and the NEXT_PUBLIC_API_URL is correctly set.
+Port Configuration: The frontend runs on port 1078 to avoid conflicts with the backend (port 5203).
+Production Security: Update environment variables and secure the backend database credentials before deploying to production.
+TypeScript Errors: The ignoreBuildErrors option is enabled for development. Ensure all TypeScript errors are resolved before production deployment.
+
+📖 License
+This project is licensed under the MIT License. Feel free to use, modify, and contribute to the project.
+
+💡 Contributing
+Contributions are welcome! To contribute:
+
+Fork the repository.
+Create a new branch (git checkout -b feature/your-feature).
+Make your changes and commit (git commit -m "Add your feature").
+Push to the branch (git push origin feature/your-feature).
+Open a pull request.
+
+Please ensure your code follows the project's linting and formatting standards (run npm run format and npm run lint before committing).
+
+📬 Contact
+For questions or feedback, reach out to Hussein Asadi.
+Happy blogging! 🚀
 
 ```bash
 npm run dev
@@ -13,24 +179,3 @@ pnpm dev
 # or
 bun dev
 ```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
